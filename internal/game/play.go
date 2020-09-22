@@ -1,70 +1,41 @@
-package main
+package game
 
 import (
 	"bufio"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
+
+	"../../pkg/games"
 )
 
-func main() {
-	reader := bufio.NewReader(os.Stdin)
-
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println(r)
-			play(reader)
-		}
-	}()
-
-	res := play(reader)
-	showResult(res...)
-}
-
-func FizzBuzz(n int) string {
-	if n%15 == 0 {
-		return "FizzBuzz"
-	}
-
-	if n%5 == 0 {
-		return "Fizz"
-	}
-
-	if n%3 == 0 {
-		return "Buzz"
-	}
-
-	return strconv.Itoa(n)
-}
-
-func play(reader *bufio.Reader) []string {
+func Play(reader *bufio.Reader) []string {
 	const maxInput = 100
 
 	fmt.Print("Enter stating number for FizzBuzz game: ")
 	start, err := getInput(reader)
 	if err != nil {
 		fmt.Println(err)
-		return play(reader)
+		return Play(reader)
 	}
 
 	fmt.Print("Enter last number for FizzBuzz game: ")
 	end, err := getInput(reader)
 	if err != nil {
 		fmt.Println(err)
-		return play(reader)
+		return Play(reader)
 	}
 
 	if end <= start {
 		fmt.Print("Starting number must be bigger then the last one \n")
-		return play(reader)
+		return Play(reader)
 	}
 
 	if end > maxInput {
 		panic("too big last number")
 	}
 
-	return getResult(start, end, FizzBuzz)
+	return getResult(start, end, games.FizzBuzz)
 }
 
 func getInput(reader *bufio.Reader) (int, error) {
@@ -90,10 +61,4 @@ func getResult(start int, end int, game func(int) string) []string {
 	}
 
 	return res
-}
-
-func showResult(values ...string) {
-	for _, val := range values {
-		fmt.Println(val)
-	}
 }
