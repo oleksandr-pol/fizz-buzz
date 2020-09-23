@@ -1,24 +1,41 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 
 	"../../internal/game"
 )
 
 func main() {
-	reader := bufio.NewReader(os.Stdin)
-
 	defer func() {
-		if r := recover(); r != nil {
+		r := recover()
+		if r == "Failed to read input" {
 			fmt.Println(r)
-			game.Play(reader)
+			fmt.Println("Trying to start new game")
+			runGame()
+		}
+
+		if r != nil {
+			fmt.Println(r)
+			panic(r)
 		}
 	}()
 
-	res := game.Play(reader)
+	runGame()
+}
+
+func runGame() {
+	play := game.Init()
+	res, exit, err := play()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	if exit {
+		return
+	}
+
 	showResult(res...)
 }
 
