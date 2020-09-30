@@ -72,7 +72,7 @@ func getInput(reader *bufio.Reader) (int, bool, error) {
 
 	input, err := reader.ReadString('\n')
 	if err != nil {
-		panic("Failed to read input")
+		panic(&ReaderError{"Failed to read input"})
 	}
 
 	if strings.TrimSpace(input) == exitInput {

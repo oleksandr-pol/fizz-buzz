@@ -8,16 +8,16 @@ import (
 
 func main() {
 	defer func() {
-		r := recover()
-		if r == "Failed to read input" {
-			fmt.Println(r)
+		err := recover()
+		if e, ok := err.(*game.ReaderError); ok {
+			fmt.Println(e)
 			fmt.Println("Trying to start new game")
 			runGame()
 		}
 
-		if r != nil {
-			fmt.Println(r)
-			panic(r)
+		if err != nil {
+			fmt.Println(err)
+			panic(err)
 		}
 	}()
 
